@@ -10,8 +10,7 @@
 			"cwd": "${workspaceFolder}",
 			"env": {
 				"PYTHONPATH": "${workspaceFolder}/src",
-				"PYSPARK_PYTHON": "${command:python.interpreterPath}",
-				"PYSPARK_DRIVER_PYTHON": "${command:python.interpreterPath}"
+				"JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64"
 			},
 			"justMyCode": false
 		}
