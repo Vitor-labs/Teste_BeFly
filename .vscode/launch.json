@@ -8,11 +8,13 @@
 			"program": "${workspaceFolder}/src/run.py",
 			"console": "integratedTerminal",
 			"cwd": "${workspaceFolder}",
+			"python": "${workspaceFolder}/.venv/bin/python",
 			"env": {
 				"PYTHONPATH": "${workspaceFolder}/src",
-				"JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64"
+				"PYSPARK_PYTHON": "${workspaceFolder}/.venv/bin/python",
+				"PYSPARK_DRIVER_PYTHON": "${workspaceFolder}/.venv/bin/python"
 			},
 			"justMyCode": false
-		}
+		},
 	]
 }
