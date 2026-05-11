@@ -1,0 +1,48 @@
+[project]
+name = "teste-befly"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+	"httpx>=0.28.1",
+	"pandas>=3.0.2",
+	"pandera[pyspark]>=0.31.1",
+	"pydantic>=2.13.4",
+	"pydantic-settings>=2.14.1",
+	"pyspark>=4.1.1",
+	"pytest>=9.0.3",
+	"python-dotenv>=1.0",
+	"structlog>=25.5.0",
+]
+
+[dependency-groups]
+dev = ["ipykernel>=7.2.0"]
+
+[tool.mypy]
+# strict mode + workspace files
+python_version = "3.12"
+mypy_path = ["src"]
+strict = true
+ignore_missing_imports = true
+show_error_codes = true
+warn_unused_configs = true
+
+[tool.ruff]
+# Lint‐and‐fix with Ruff, including import sorting
+line-length = 88
+select = ["E", "F", "W", "C90", "I"]
+ignore = ["E203", "W191"]
+per-file-ignores = { "__init__.py" = ["F401"] }
+# Ruff's --fix mode
+fix = true
+
+[tool.ruff.format]
+indent-style = "tab"
+
+[tool.isort]
+# Matches Ruff's default import‐sorting style
+profile = "black"
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true

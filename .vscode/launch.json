@@ -1,0 +1,17 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run Pipeline",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${workspaceFolder}/src/main/run.py",
+			"cwd": "${workspaceFolder}",
+			"env": {
+				"PYTHONPATH": "${workspaceFolder}/src"
+			},
+			"console": "integratedTerminal",
+			"justMyCode": true
+		}
+	]
+}
