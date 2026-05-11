@@ -2,16 +2,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Run Pipeline",
+			"name": "Run Pipeline (Full)",
 			"type": "debugpy",
 			"request": "launch",
-			"program": "${workspaceFolder}/src/main/run.py",
+			"program": "${workspaceFolder}/src/run.py",
+			"console": "integratedTerminal",
 			"cwd": "${workspaceFolder}",
 			"env": {
-				"PYTHONPATH": "${workspaceFolder}/src"
+				"PYTHONPATH": "${workspaceFolder}/src",
+				"PYSPARK_PYTHON": "${command:python.interpreterPath}",
+				"PYSPARK_DRIVER_PYTHON": "${command:python.interpreterPath}"
 			},
-			"console": "integratedTerminal",
-			"justMyCode": true
+			"justMyCode": false
 		}
 	]
 }
