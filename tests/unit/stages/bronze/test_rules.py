@@ -2,7 +2,7 @@
 
 from pyspark.sql import SparkSession
 
-from src.stages.bronze.rules import normalize_string_columns
+from stages.bronze.rules import normalize_string_columns
 
 
 def test_normalize_string_columns_trims_whitespace(spark: SparkSession) -> None:

@@ -137,7 +137,6 @@ projeto-befly/
 
 ---
 
-```markdown
 ## 🚀 Como Executar
 
 ### Pré-requisitos
@@ -147,7 +146,6 @@ projeto-befly/
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-python scripts/download_raw.py   # baixa hotel_bookings.csv (~17MB)
 ```
 > Os metadados (`country_metadata.csv`, `hotel_metadata.csv`) já estão em `data/raw/`.
 

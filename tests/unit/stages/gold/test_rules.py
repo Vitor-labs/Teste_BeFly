@@ -2,7 +2,7 @@
 
 from pyspark.sql import SparkSession
 
-from src.stages.gold.rules import cancellation_rate, percentage_of
+from stages.gold.rules import cancellation_rate, percentage_of
 
 
 def test_cancellation_rate_handles_zero_total(spark: SparkSession) -> None:

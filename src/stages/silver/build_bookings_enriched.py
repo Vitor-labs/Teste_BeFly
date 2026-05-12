@@ -1,6 +1,6 @@
 """Builds the Silver `bookings_enriched` dataset from Bronze sources."""
 
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
 
 from errors.layer_errors import (
 	PipelineLayer,
@@ -60,9 +60,8 @@ def build_bookings_enriched(spark: SparkSession) -> None:
 	except Exception as exc:
 		raise SilverTransformationError(f"transformation failed: {exc}") from exc
 
-	validated = _validate(enriched)
 	generate_quality_report(
-		validated,
+		validated := _validate(enriched),
 		output_path=settings.silver_dir / "bookings_enriched" / "_quality_report.json",
 		dataset_name="silver.bookings_enriched",
 		extra_metrics={"filters": removal_counts},
@@ -70,7 +69,7 @@ def build_bookings_enriched(spark: SparkSession) -> None:
 	parquet_repo.write(validated, target, mode=WriteMode.OVERWRITE)
 
 
-def _validate(dataframe):
+def _validate(dataframe: DataFrame) -> DataFrame:
 	"""Runs Pandera validation against the Silver schema.
 
 	Args:

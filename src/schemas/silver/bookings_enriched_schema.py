@@ -2,12 +2,7 @@
 
 import pandera.pyspark as pa
 from pandera.pyspark import Column, DataFrameSchema
-from pyspark.sql.types import (
-	DateType,
-	DoubleType,
-	IntegerType,
-	StringType,
-)
+from pyspark.sql.types import DateType, DoubleType, IntegerType, StringType
 
 bookings_enriched_schema = DataFrameSchema(
 	columns={

@@ -38,7 +38,3 @@ def main() -> None:
 		raise
 	finally:
 		spark.stop()
-
-
-if __name__ == "__main__":
-	main()

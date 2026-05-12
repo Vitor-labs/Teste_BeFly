@@ -7,20 +7,17 @@ from main.config import settings
 
 
 def build_spark_session() -> SparkSession:
-	"""Builds (or retrieves) a SparkSession for the pipeline.
-
-	Returns:
-		An active SparkSession.
-
-	Raises:
-		SparkSessionError: If the SparkSession cannot be created.
-	"""
+	"""Builds (or retrieves) a SparkSession for the pipeline."""
 	try:
-		return (
+		spark = (
 			SparkSession.builder.appName(settings.spark_app_name)
 			.master(settings.spark_master)
 			.config("spark.sql.parquet.compression.codec", "snappy")
+			.config("spark.sql.legacy.timeParserPolicy", "LEGACY")
 			.getOrCreate()
 		)
+		# Garante que aplica mesmo se a sessão já existia
+		spark.conf.set("spark.sql.legacy.timeParserPolicy", "LEGACY")
+		return spark
 	except Exception as exc:
 		raise SparkSessionError(f"Could not create SparkSession: {exc}") from exc

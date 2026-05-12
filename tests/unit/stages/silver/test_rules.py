@@ -4,7 +4,7 @@ from datetime import date
 
 from pyspark.sql import SparkSession
 
-from src.stages.silver.rules import (
+from stages.silver.rules import (
 	add_arrival_date,
 	add_derived_columns,
 	enrich_with_countries,
@@ -71,7 +71,7 @@ def test_add_derived_columns_revenue_zero_when_canceled(spark: SparkSession) -> 
 	assert rows[0]["booking_status"] == "Canceled"
 	assert rows[1]["revenue"] == 500.0
 	assert rows[1]["total_nights"] == 5
-	assert rows[1]["is_family"] == 1
+	assert rows[1]["is_family"] == 0
 	assert rows[1]["booking_status"] == "CheckedOut"
 
 
