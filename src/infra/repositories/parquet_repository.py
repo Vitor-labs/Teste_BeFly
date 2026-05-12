@@ -49,10 +49,7 @@ class ParquetRepository(IReader, IWriter):
 
 	@log_execution_time
 	def write(
-		self,
-		dataframe: DataFrame,
-		path: str,
-		mode: WriteMode = WriteMode.OVERWRITE,
+		self, dataframe: DataFrame, path: str, mode: WriteMode = WriteMode.OVERWRITE
 	) -> None:
 		"""Writes a DataFrame to Parquet using Snappy compression.
 

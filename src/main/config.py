@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 		spark_app_name: Spark application name.
 		spark_master: Spark master URL.
 		null_token: String literal in raw CSVs to be treated as NULL.
+		partition_by_year: Bool flag for partitioning
 	"""
 
 	model_config = SettingsConfigDict(env_file=".env", extra="ignore")
@@ -31,6 +32,7 @@ class Settings(BaseSettings):
 	spark_master: str = "local[*]"
 
 	null_token: str = "NULL"
+	partition_by_year: bool = False  # Resolvi não implementar diretamente
 
 
 settings = Settings()

@@ -1,0 +1,9 @@
+services:
+  pipeline:
+    build: .
+    container_name: befly-pipeline
+    volumes:
+      - ./data:/app/data
+    environment:
+      SPARK_APP_NAME: befly-pipeline
+      SPARK_MASTER: local[*]

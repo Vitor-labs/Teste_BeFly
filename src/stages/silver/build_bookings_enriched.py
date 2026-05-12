@@ -22,6 +22,7 @@ from stages.silver.rules import (
 )
 from utils.decorators import log_execution_time
 from utils.logger import get_logger
+from utils.quality_report import generate_quality_report
 
 _log = get_logger(__name__)
 
@@ -45,21 +46,27 @@ def build_bookings_enriched(spark: SparkSession) -> None:
 		countries = parquet_repo.read(str(settings.bronze_dir / "countries"))
 		hotels = parquet_repo.read(str(settings.bronze_dir / "hotels"))
 
-		typed = cast_columns(bookings)
-		filled = fill_nulls(typed)
-		filtered, removal_counts = filter_invalid_bookings(filled)
+		filtered, removal_counts = filter_invalid_bookings(
+			fill_nulls(cast_columns(bookings))
+		)
 		_log.info("silver_filters_applied", **removal_counts)
-
-		dated = add_arrival_date(filtered)
-		derived = add_derived_columns(dated)
-		with_countries = enrich_with_countries(derived, countries)
-		enriched = enrich_with_hotels(with_countries, hotels)
-
+		enriched = enrich_with_hotels(
+			enrich_with_countries(
+				add_derived_columns(add_arrival_date(filtered)), countries
+			),
+			hotels,
+		)
 		_log.info("silver_enriched_built", row_count=enriched.count())
 	except Exception as exc:
 		raise SilverTransformationError(f"transformation failed: {exc}") from exc
 
 	validated = _validate(enriched)
+	generate_quality_report(
+		validated,
+		output_path=settings.silver_dir / "bookings_enriched" / "_quality_report.json",
+		dataset_name="silver.bookings_enriched",
+		extra_metrics={"filters": removal_counts},
+	)
 	parquet_repo.write(validated, target, mode=WriteMode.OVERWRITE)
 
 
