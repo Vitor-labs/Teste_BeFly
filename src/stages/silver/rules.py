@@ -2,6 +2,7 @@
 
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
+	coalesce,
 	col,
 	concat_ws,
 	lpad,
@@ -30,6 +31,9 @@ _LONG_STAY_THRESHOLD: int = 7
 
 def cast_columns(dataframe: DataFrame) -> DataFrame:
 	"""Casts numeric and date columns to their expected types.
+
+	`reservation_status_date` is parsed tolerating both `yyyy-MM-dd`
+	and `dd-MM-yy` (the format used by some public mirrors of the dataset).
 
 	Args:
 		dataframe: Bronze bookings DataFrame.
@@ -61,7 +65,11 @@ def cast_columns(dataframe: DataFrame) -> DataFrame:
 
 	return dataframe.withColumn(
 		"reservation_status_date",
-		to_date(col("reservation_status_date"), "yyyy-MM-dd"),
+		coalesce(
+			to_date(col("reservation_status_date"), "yyyy-MM-dd"),
+			to_date(col("reservation_status_date"), "dd-MM-yy"),
+			to_date(col("reservation_status_date"), "dd/MM/yyyy"),
+		),
 	)
 
 
