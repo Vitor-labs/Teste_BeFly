@@ -1,11 +1,11 @@
 """CSV repository for Spark-based read operations."""
 
-from typing import Literal
-
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType
 
 from errors.infra_errors import StorageMedia, StorageReadError, StorageWriteError
+from infra.interfaces.i_reader import IReader
+from infra.interfaces.i_writer import IWriter, WriteMode
 from main.config import settings
 from utils.decorators import log_execution_time, retry
 from utils.logger import get_logger
@@ -13,7 +13,7 @@ from utils.logger import get_logger
 _log = get_logger(__name__)
 
 
-class CsvRepository:
+class CsvRepository(IReader, IWriter):
 	"""Reads and writes CSV files via Spark."""
 
 	def __init__(self, spark: SparkSession) -> None:
@@ -61,7 +61,7 @@ class CsvRepository:
 		self,
 		dataframe: DataFrame,
 		path: str,
-		mode: Literal["overwrite", "append", "ignore", "error"] = "overwrite",
+		mode: WriteMode = WriteMode.OVERWRITE,
 	) -> None:
 		"""Writes a DataFrame back as CSV (used for Gold KPIs if needed).
 
@@ -74,6 +74,6 @@ class CsvRepository:
 			StorageWriteError: If the write operation fails.
 		"""
 		try:
-			dataframe.write.mode(mode).option("header", "true").csv(path)
+			dataframe.write.mode(mode.value).option("header", "true").csv(path)
 		except Exception as exc:
 			raise StorageWriteError(str(exc), StorageMedia.CSV, path) from exc

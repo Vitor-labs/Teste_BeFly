@@ -4,6 +4,7 @@ from pandas import read_csv
 from pyspark.sql import SparkSession
 
 from errors.layer_errors import BronzeIngestionError
+from infra.interfaces.i_writer import WriteMode
 from infra.repositories.csv_repository import CsvRepository
 from infra.repositories.parquet_repository import ParquetRepository
 from main.config import settings
@@ -45,7 +46,7 @@ def ingest_bookings(spark: SparkSession) -> None:
 			)
 		)
 		ParquetRepository(spark).write(
-			dataframe, str(settings.bronze_dir / "bookings"), mode="overwrite"
+			dataframe, str(settings.bronze_dir / "bookings"), mode=WriteMode.OVERWRITE
 		)
 		_log.info("bronze_bookings_loaded", row_count=dataframe.count())
 	except Exception as exc:

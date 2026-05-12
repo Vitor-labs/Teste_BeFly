@@ -3,6 +3,7 @@
 from pyspark.sql import SparkSession
 
 from errors.layer_errors import BronzeIngestionError
+from infra.interfaces.i_writer import WriteMode
 from infra.repositories.csv_repository import CsvRepository
 from infra.repositories.parquet_repository import ParquetRepository
 from main.config import settings
@@ -33,7 +34,7 @@ def ingest_hotels(spark: SparkSession) -> None:
 		)
 		_log.info("bronze_hotels_loaded", row_count=dataframe.count())
 		ParquetRepository(spark).write(
-			dataframe, str(settings.bronze_dir / "hotels"), mode="overwrite"
+			dataframe, str(settings.bronze_dir / "hotels"), mode=WriteMode.OVERWRITE
 		)
 	except Exception as exc:
 		raise BronzeIngestionError(f"hotels ingestion failed: {exc}") from exc

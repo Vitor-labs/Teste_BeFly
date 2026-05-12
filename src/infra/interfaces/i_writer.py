@@ -1,8 +1,16 @@
 """Writer contract for any storage backend."""
 
-from typing import Literal, Protocol
+import enum
+from typing import Protocol
 
 from pyspark.sql import DataFrame
+
+
+class WriteMode(enum.Enum):
+	OVERWRITE = "overwrite"
+	APPEND = "append"
+	IGNORE = "ignore"
+	ERROR = "error"
 
 
 class IWriter(Protocol):
@@ -12,7 +20,7 @@ class IWriter(Protocol):
 		self,
 		dataframe: DataFrame,
 		path: str,
-		mode: Literal["overwrite", "append", "ignore", "error"] = "overwrite",
+		mode: WriteMode = WriteMode.OVERWRITE,
 	) -> None:
 		"""Persists `dataframe` to `path`.
 

@@ -1,18 +1,18 @@
 """Parquet repository for Spark-based read/write operations."""
 
-from typing import Literal
-
 from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType
 
 from errors.infra_errors import StorageMedia, StorageReadError, StorageWriteError
+from infra.interfaces.i_reader import IReader
+from infra.interfaces.i_writer import IWriter, WriteMode
 from utils.decorators import log_execution_time, retry
 from utils.logger import get_logger
 
 _log = get_logger(__name__)
 
 
-class ParquetRepository:
+class ParquetRepository(IReader, IWriter):
 	"""Reads and writes Parquet files via Spark with Snappy compression."""
 
 	def __init__(self, spark: SparkSession) -> None:
@@ -52,7 +52,7 @@ class ParquetRepository:
 		self,
 		dataframe: DataFrame,
 		path: str,
-		mode: Literal["overwrite", "append", "ignore", "error"] = "overwrite",
+		mode: WriteMode = WriteMode.OVERWRITE,
 	) -> None:
 		"""Writes a DataFrame to Parquet using Snappy compression.
 
@@ -66,6 +66,8 @@ class ParquetRepository:
 		"""
 		try:
 			_log.info("parquet_write", path=path, mode=mode)
-			dataframe.write.mode(mode).option("compression", "snappy").parquet(path)
+			dataframe.write.mode(mode.value).option("compression", "snappy").parquet(
+				path
+			)
 		except Exception as exc:
 			raise StorageWriteError(str(exc), StorageMedia.PARQUET, path) from exc
