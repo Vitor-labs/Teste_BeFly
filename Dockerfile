@@ -1,11 +1,11 @@
 FROM python:3.12-slim
 
-# Java é requisito do PySpark
+# Java é requisito do PySpark (PySpark 3.5+ suporta Java 17/21)
 RUN apt-get update && \
-	apt-get install -y --no-install-recommends openjdk-17-jre-headless procps && \
+	apt-get install -y --no-install-recommends openjdk-21-jre-headless procps && \
 	rm -rf /var/lib/apt/lists/*
 
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
+ENV JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64 \
 	PYTHONPATH=/app/src \
 	PYSPARK_PYTHON=python \
 	PYSPARK_DRIVER_PYTHON=python \
