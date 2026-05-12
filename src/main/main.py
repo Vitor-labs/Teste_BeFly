@@ -6,6 +6,7 @@ from infra.spark.session_factory import build_spark_session
 from stages.bronze.ingest_bookings import ingest_bookings
 from stages.bronze.ingest_countries import ingest_countries
 from stages.bronze.ingest_hotels import ingest_hotels
+from stages.silver.build_bookings_enriched import build_bookings_enriched
 from utils.logger import configure_logging, get_logger
 
 
@@ -17,10 +18,13 @@ def main() -> None:
 
 	spark = build_spark_session()
 	try:
+		# Bronze
 		ingest_bookings(spark)
 		ingest_countries(spark)
 		ingest_hotels(spark)
-		# silver / gold stages will plug in here.
+		# Silver
+		build_bookings_enriched(spark)
+		# Gold
 		log.info("pipeline_finished")
 	except (LayerError, InfraError) as exc:
 		log.error("pipeline_failed", error_type=exc.error_type, message=str(exc))

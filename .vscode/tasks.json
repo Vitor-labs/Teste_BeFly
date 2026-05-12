@@ -1,0 +1,94 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Pipeline: Run Full",
+			"type": "shell",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"args": [
+				"${workspaceFolder}/src/run.py"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PYTHONPATH": "${workspaceFolder}/src",
+					"PYSPARK_PYTHON": "${workspaceFolder}/.venv/bin/python",
+					"PYSPARK_DRIVER_PYTHON": "${workspaceFolder}/.venv/bin/python"
+				}
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Pipeline: Download Raw Data",
+			"type": "shell",
+			"command": "${workspaceFolder}/.venv/bin/python",
+			"args": [
+				"${workspaceFolder}/scripts/download_raw.py"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"clear": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Pipeline: Install Dependencies",
+			"type": "shell",
+			"command": "${workspaceFolder}/.venv/bin/pip",
+			"args": [
+				"install",
+				"-r",
+				"requirements.txt"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Pipeline: Setup (venv + deps + raw)",
+			"dependsOrder": "sequence",
+			"dependsOn": [
+				"Pipeline: Install Dependencies",
+				"Pipeline: Download Raw Data"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Pipeline: Clean Data Layers",
+			"type": "shell",
+			"command": "rm",
+			"args": [
+				"-rf",
+				"${workspaceFolder}/data/bronze",
+				"${workspaceFolder}/data/silver",
+				"${workspaceFolder}/data/gold"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "silent",
+				"panel": "dedicated"
+			},
+			"problemMatcher": []
+		}
+	]
+}
